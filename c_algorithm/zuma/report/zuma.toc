@@ -1,0 +1,13 @@
+\contentsline {section}{\numberline {1}实验目的和内容}{2}{section.1}% 
+\contentsline {subsection}{\numberline {1.1}题目描述}{2}{subsection.1.1}% 
+\contentsline {section}{\numberline {2}输入和输出说明}{2}{section.2}% 
+\contentsline {subsection}{\numberline {2.1}输入}{2}{subsection.2.1}% 
+\contentsline {subsection}{\numberline {2.2}输出}{2}{subsection.2.2}% 
+\contentsline {subsubsection}{\numberline {2.2.1}样例}{2}{subsubsection.2.2.1}% 
+\contentsline {subsection}{\numberline {2.3}问题分析}{2}{subsection.2.3}% 
+\contentsline {section}{\numberline {3}解题思路}{3}{section.3}% 
+\contentsline {section}{\numberline {4}实验代码及注释}{3}{section.4}% 
+\contentsline {subsection}{\numberline {4.1}双向链表版}{3}{subsection.4.1}% 
+\contentsline {subsection}{\numberline {4.2}双向循环链表版（未通过测试）}{5}{subsection.4.2}% 
+\contentsline {section}{\numberline {5}运行结果截图}{8}{section.5}% 
+\contentsline {section}{\numberline {6}总结体会}{8}{section.6}% 
