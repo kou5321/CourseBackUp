@@ -8,6 +8,9 @@ class Employee:
         if self.ability >= 5:
             self.ability = self.ability - 5
 
+        elif  0 < self.ability < 5:
+            self.ability = 0
+
         else:
             # self.ability = 0
             print('能力值不足！')

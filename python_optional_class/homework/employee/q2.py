@@ -32,15 +32,18 @@ class Boss:
 
     def startWork(self):
         for employee in self.employeeList:
-            while employee.ability != 0:
-                employee.dowork()
-                self.work = self.work - 5
+            while employee.ability > 0:
+                if employee.ability >= 5:
+                    employee.dowork()
+                    self.work = self.work - 5
+                elif 0 < employee.ability < 5:
+                    self.work -= employee.ability
+                    employee.dowork()
                 print(employee.name + "剩余能力值：%d" % employee.ability)
                 print("剩余工作量：%d" % self.work)
                 if self.work <= 0:
                     self.flag = 0
                     print("工作完成!")
-                    self.endWork()
                     break
         if self.flag == 2:
             print("你的公司倒闭了")
@@ -56,7 +59,7 @@ class Boss:
                 self.addEmployee(new_Emploee)
                 self.startWork()
             if choose == 'n':
-                print("我决定放弃治疗")
+                print("我决定放弃治疗,准备破产清算")
 
 
     def endWork(self):
@@ -68,8 +71,9 @@ class Boss:
 
 if __name__ == '__main__':
     # boss = Boss(100000,100) # 顺利完成
-    boss = Boss(100000,1000) #员工不足
+    # boss = Boss(100000,1000) #员工不足
     # boss = Boss(10000,200) #money不足
+    boss = Boss(int(input('请输入资金总数：')), int(input('请输入工作量：')))
     boss.init_employee()
     boss.startWork()
     boss.endWork()
