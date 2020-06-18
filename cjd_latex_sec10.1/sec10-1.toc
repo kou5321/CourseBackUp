@@ -1,0 +1,6 @@
+\beamer@sectionintoc {1}{分离变量法和傅里叶积分表示公式}{4}{0}{1}
+\beamer@sectionintoc {2}{特征函数展开法和傅里叶变换}{40}{0}{2}
+\beamer@sectionintoc {3}{傅里叶变换的基本性质}{64}{0}{3}
+\beamer@sectionintoc {4}{求解偏微分方程定解问题的傅里叶变换法}{110}{0}{4}
+\beamer@sectionintoc {5}{多重傅里叶变换及其应用}{155}{0}{5}
+\beamer@sectionintoc {6}{作业}{171}{0}{6}

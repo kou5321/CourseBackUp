@@ -1,0 +1,1528 @@
+% !TEX program = Xelatex
+
+%\documentclass[notheorems,mathserif,12pt,compress,UTF8]{ctexbeamer}
+\documentclass[aspectratio=169,notheorems,12pt,compress,UTF8]{ctexbeamer} %宽屏
+\usetheme{CambridgeUS}
+%\usetheme{Berlin}
+\usecolortheme{orchid}
+%\usecolortheme{albatross}
+\usefonttheme{professionalfonts}
+
+%\usepackage{amssymb,latexsym}
+
+%\usepackage{smartdiagram}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta}
+%\usetikzlibrary{calc, quotes, angles}
+%\usetikzlibrary{shadows}
+%\usetikzlibrary{shapes.geometric}
+%\usetikzlibrary{shapes.symbols}
+%\usetikzlibrary{shapes.misc}
+%\usetikzlibrary{mindmap}
+
+\usepackage{bm,cases}
+%\usepackage{color}
+\linespread{1.2} %设置行间距
+\setlength\lineskiplimit{3.7bp} % 设置最小行间距
+\setlength\lineskip{3.7bp}
+
+\setbeamertemplate{theorems}[numbered]%定理编号
+\setbeamertemplate{caption}[numbered] %图表编号
+\setbeamertemplate{navigation symbols}{}%去掉导航条
+
+\title{10.1 傅里叶变换法}
+\author{常晋德}
+\institute{中国海洋大学数学科学学院}
+\date{\today}
+\subject{复积分}
+\keywords{复积分, 牛顿 -- 莱布尼兹公式}
+
+%\includeonlylecture{1,2}
+%\includeonlylecture{1,2,3,4}
+
+\DeclareMathOperator\dif{d\!}
+\DeclareMathOperator\Arg{Arg}
+\DeclareMathOperator\Ln{Ln}
+
+\def\R {\mathbb {R}}
+\def\N {\mathbb {N}}
+\def\Z {\mathbb {Z}}
+\def\C {\mathbb {C}}
+\def\crr{\cr\noalign{\vskip2mm}}
+\def\dfrac{\displaystyle\frac}
+\def\disp{\displaystyle}
+\def\dref#1{\eqref{#1}}
+\def\dsum{\displaystyle\sum}
+\def\p{\partial}
+%\newcommand{\dif}{\mathrm{d}\,}
+\newcommand{\pp}[2]{\frac{\partial{#1}}{\partial{#2}}}
+\newcommand{\me}{\mathrm{e}}
+\newcommand{\mi}{\mathrm{i}}
+\newcommand{\dd}[2]{\frac{\dif{#1}}{\dif{#2}}}
+\newcommand{\raw}{\rightarrow}
+\newcommand{\Div}{\mathrm{div}\,}
+\newcommand{\rot}{\mathrm{rot}\,}
+\renewcommand{\Re}{\mathrm{Re}\,}
+\renewcommand{\Im}{\mathrm{Im}\,}
+\newcommand{\cj}[1]{\overline{#1}}
+\newcommand{\sh}{\sinh}
+\newcommand{\ch}{\cosh}
+\newcommand{\nequiv}{\;/\hspace{-3.3mm}\equiv}
+\newcommand{\myend}{\hfill\rule{2.5mm}{4mm}}
+
+\newcommand{\spb}{\vspace{3mm}}
+\newcommand{\mpb}{\vspace{5mm}}
+\newcommand{\bpb}{\vspace{10mm}}
+
+\newtheorem{proposition}{命题}
+\newtheorem{theorem}{定理}
+\newtheorem{Definition}{定义}
+\newtheorem{corollary}{推论}
+\newtheorem{example}{例}
+
+\renewcommand{\thetheorem}{10.\arabic{theorem}}
+\renewcommand{\theproposition}{10.\arabic{proposition}}
+\renewcommand{\theDefinition}{10.\arabic{Definition}}
+\renewcommand{\thecorollary}{10.\arabic{corollary}}
+\renewcommand{\theexample}{10.\arabic{example}}
+\renewcommand{\theequation}{10.\arabic{equation}}
+\renewcommand{\thefigure}{10.\arabic{figure}}
+
+%\setcounter{section}{10}
+\setcounter{equation}{0}
+\setcounter{Definition}{0}
+\setcounter{theorem}{0}
+\setcounter{proposition}{0}
+\setcounter{corollary}{0}
+\setcounter{example}{0}
+
+
+\begin{document}
+
+\begin{frame}
+\begin{center}
+\zihao{2}{\color{red}\heiti 第十章\quad 积分变换法}
+\end{center}
+
+\mpb\songti\qquad 对函数$f(x)$做某种\textcolor{magenta}{积分变换}, 就是指对它进行如下形式的含参变量的积分运算
+$$
+F(\lambda)=\int_a^b f(x)k(x,\lambda)\dif x,
+$$
+其中的二元函数$k(x,\lambda)$称为\textcolor{magenta}{积分核}, $-\infty\leq a<b\leq+\infty$.
+
+\begin{center}
+\begin{tikzpicture}
+\draw[thick,-stealth] (-1,0) node[left] {$f(x)$}--(1,0) node[right] {$F(\lambda)$};
+\node[magenta] at (-1.5,-0.6) {原像函数};
+\node[magenta] at (1.6,-0.6) {像函数};
+\end{tikzpicture}
+\end{center}
+
+积分核$k(x,\lambda)$的不同取法决定了不同的积分变换.
+\end{frame}
+
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}{目录}
+\tableofcontents
+\end{frame}
+
+\zihao{-4} %设置字号
+\songti
+
+\lecture{1}{1}
+\section{分离变量法和傅里叶积分表示公式}
+\begin{frame}
+\textcolor{teal}{\zihao{4}10.1.1 分离变量法和傅里叶积分表示公式}\mpb
+
+\qquad 考虑热传导方程初值问题
+\begin{equation}\label{10.1}
+\left\{
+\begin{array}{ll}
+u_{t}=a^2u_{xx}, & -\infty<x<+\infty,t>0,\\
+u(x,0)=\varphi(x), & -\infty<x<+\infty.
+\end{array}\right.
+\end{equation}
+这是一个新的定解问题类型, 该如何求解它呢？\pause
+自然的想法是继续使用分离变量法.\pause\spb
+
+\qquad 设$u(x,t)=X(x)T(t)$, 代入方程得
+$$
+\frac{T'(t)}{a^2T(t)}=\frac{X''(x)}{X(x)}=-\lambda,
+$$
+其中$\lambda$是待定常数. 由此可得$X(x)$和$T(t)$分别满足下面的常微分方程
+\end{frame}
+
+\begin{frame}
+\vspace{-5mm}
+\begin{gather}
+T'(t)+\lambda a^2T(t)=0,\;t>0,\label{10.2}\\
+X''(x)+\lambda X(x)=0,\;-\infty<x<+\infty.\label{10.3}
+\end{gather}\pause
+这里因为没有边界条件可用, 从而对这两个方程都没有什么限制条件可用,
+似乎没有必要再选关于$X(x)$ 的方程\eqref{10.3}为特征值问题了. \pause
+但在第八章中我们已经解释过, {\heiti 解$u(x,t)$可看作是在一个关于$x$的函数空间中的运动,
+而特征值问题的意义就在于为这个函数空间建立一个适当的坐标系}.
+所以特征值问题还是得选方程\eqref{10.3}, 而不能选方程\eqref{10.2}.\pause\spb
+
+\qquad 应当注意虽然表面上对方程\eqref{10.3}无条件约束, 但却隐含着自然边界条件
+$$
+|X(\pm \infty)|<+\infty.
+$$\pause
+这是因为当$x\rightarrow\infty$时, 温度$u(x,t)$趋于无穷大的情况在物理中是不会出现的.
+\end{frame}
+
+\begin{frame}
+所以我们要求解的特征值问题实际上是
+\begin{equation}\label{10.4}
+\left\{
+\begin{array}{ll}
+X''(x)+\lambda X(x)=0,&-\infty<x<+\infty,\\
+|X(\pm \infty)|<+\infty.
+\end{array}\right.
+\end{equation}\pause
+这是一个\textcolor{magenta}{奇异施图姆 -- 刘维尔特征值问题}. \pause 同讨论特征值问题(8.13)时一样, 我们可分三类情况讨论:\pause\spb
+
+\qquad 1) 当$\lambda<0$时, 方程$X''(x)+\lambda X(x)=0$的通解为
+$$
+X(x)=A\me^{\sqrt{-\lambda}\,x}+B\me^{-\sqrt{-\lambda}\,x},\quad -\infty<x<+\infty.
+$$
+当$x\rightarrow+\infty$时, 若$A\neq0$, 则有$X(x)\rightarrow+\infty$.
+所以有$A=0$. 同样, 令$x\rightarrow-\infty$, 可得$B=0$. 因此在此情形下, 特征值问题\eqref{10.4}无解.
+
+\end{frame}
+
+\begin{frame}
+\qquad 2) 当$\lambda=0$时, 方程$X''(x)+\lambda X(x)=0$的通解为
+\begin{equation*}
+ X(x)= A+Bx,\quad -\infty<x<+\infty.
+\end{equation*}
+同理, 当$x\raw\pm\infty$时, $X(x)$应有界, 故有$B=0$. 所以在此情形下, 常数函数$X(x)=A$为特征函数.\pause\spb
+
+\qquad 3) 当$\lambda>0$时, 方程$X''(x)+\lambda X(x)=0$的通解为
+\begin{equation*}
+X(x)=A\cos\omega x+B\sin\omega x,\quad-\infty<x<+\infty,
+\end{equation*}
+其中$\omega=\sqrt{\lambda}>0$. 这个通解显然满足自然边界条件$|X(\pm \infty)|<+\infty$,
+所以每一个$\lambda>0$都是特征值, 而上述通解便是相应的特征函数. 注意这里$\cos\omega x$和$\sin\omega x$是两个线性无关的特征函数. \pause
+为区分这些特征函数, 我们将它们重写为
+\begin{equation*}
+X_{\omega}(x)=A(\omega)\cos\omega x+B(\omega)\sin\omega x,\quad
+-\infty<x<+\infty.
+\end{equation*}
+
+\end{frame}
+
+\begin{frame}
+\qquad 综上所述, $\lambda=\omega^2\ge0$都是特征值, 相应的特征函数为
+\begin{equation*}
+X_{\omega}(x)=A(\omega)\cos\omega x+B(\omega)\sin\omega x,\quad
+-\infty<x<+\infty.
+\end{equation*}\pause
+
+
+\qquad 当$\lambda=\omega^2\ge0$时, 方程
+\begin{equation*}
+T'(t)+\lambda a^2T(t)=0,\;t>0 \eqno{\eqref{10.2}}
+\end{equation*}
+的通解都可以表示为
+$$
+T_\omega(t)=C(\omega)\me^{-a^2\omega^2t}.
+$$\pause\spb
+
+\qquad 所以对任一$\omega\ge0$, 我们都有非零特解
+$$
+u_{\omega}(x,t)=\me^{-a^2\omega^2t}[A(\omega)\cos\omega
+x+B(\omega)\sin\omega x].
+$$
+这里$C(\omega)$已经被并入$A(\omega)$和$B(\omega)$中了.
+\end{frame}
+
+\begin{frame}
+接下来, 按分离变量法的步骤, 应当把所有的特解都叠加起来.
+但这里由于特征值连续分布在$[0,+\infty)$上, 从而特解的指标$\omega$是一个连续量,
+所以需要使用积分形式而不是级数形式才能将所有的特解叠加起来. \pause
+于是关于$\omega$在$[0,+\infty)$积分得
+\begin{equation}\label{10.5}
+u(x,t)=\int_{0}^{+\infty}\me^{-a^2\omega^2t}[A(\omega)\cos\omega
+x+B(\omega)\sin\omega x]\dif\omega.
+\end{equation}\pause\spb
+
+\qquad 为确定$A(\omega)$和$B(\omega)$, 由初始条件$u(x,0)=\varphi(x)$可得
+\begin{equation}\label{10.6}
+\varphi(x)=\int_{0}^{+\infty}[A(\omega)\cos\omega
+x+B(\omega)\sin\omega x]\dif\omega.
+\end{equation}\pause
+现在我们面临的问题是这个展式在什么范围内成立？即对哪些定义在整个实数轴上的函数成立？
+还有如何求出函数$A(\omega)$和$B(\omega)$？
+\end{frame}
+
+\begin{frame}
+\qquad 设$f(x)$是一个定义在$(-\infty,+\infty)$上的非周期函数.
+因为傅里叶级数展开的适用对象是周期函数,
+所以不能期望对$f(x)$可以直接作傅里叶级数展开. \pause
+不过虽然$f(x)$在$(-\infty,+\infty)$上不能展成傅里叶级数,
+但把它限制在有限区间$[-l,l]$上后就可以将其展成傅里叶级数了, 而且这个区间可以任意大. \pause 于是我们有
+\begin{equation}\label{10.7}
+f(x)=\frac{a_0}{2}+\sum_{n=1}^{+\infty} \left(a_n\cos\frac{n\pi
+x}{l}+b_n\sin\frac{n\pi x}{l}\right),\quad x\in [-l,l],
+\end{equation}
+其中
+\begin{gather*}
+a_n=\frac{1}{l}\int_{-l}^l f(\xi)\cos\frac{n\pi \xi}{l}\dif\xi, \quad
+n=0,1,2,\cdots,\\
+b_n=\frac{1}{l}\int_{-l}^l f(\xi)\sin\frac{n\pi \xi}{l}\dif\xi, \quad
+n=1,2,3,\cdots.
+\end{gather*}\pause
+将$a_n,b_n$的表示式代入展式\eqref{10.7}, 利用三角公式
+\end{frame}
+
+\begin{frame}
+\vspace{-5mm}
+$$
+\cos(x_1-x_2)=\cos x_1\cos x_2+\sin x_1\sin x_2,
+$$
+我们可得
+$$
+f(x)=\frac{1}{2l}\int_{-l}^l f(\xi)\dif\xi+\sum_{n=1}^{+\infty}
+\frac{1}{l}\int_{-l}^l f(\xi)\cos\frac{n\pi (x-\xi)}{l}\dif\xi,\quad x\in [-l,l].
+$$\pause
+由于这个展式对任意的正实数$l$都成立, 所以我们可猜想若令$l\to+\infty$,
+则$f(x)$在实数轴上的每一点的值就都会被表示出来. \pause 为了保证积分
+\begin{equation*}
+\int_{-l}^l f(\xi)\dif\xi \quad \text{和}\quad \int_{-l}^l f(\xi)\cos\frac{n\pi (x-\xi)}{l}\dif\xi
+\end{equation*}
+的极限存在, 我们需假定$f(x)$在$(-\infty,+\infty)$上
+绝对可积, 即
+$$
+\int_{-\infty}^{+\infty} |f(x)|\dif x<\infty.
+$$
+\end{frame}
+
+\begin{frame}
+于是令$l\rightarrow+\infty$, 则对任意的$x\in(-\infty,+\infty)$,  我们有
+$$
+f(x)=\lim_{l\rightarrow+\infty}\sum_{n=1}^{+\infty}
+\frac{1}{l}\int_{-l}^l f(\xi)\cos\frac{n\pi (x-\xi)}{l}\dif\xi.
+$$\pause
+为了能够更好地预测这个极限的结果, 我们需要适当地改变一下它的写法. 记$\omega_n=\dfrac{n\pi}{l},\Delta\omega_n=\omega_{n+1}-\omega_n=\dfrac{\pi}{l},n=1,2,3,\cdots$,
+将上面的极限重写为
+$$
+f(x)=\lim_{\Delta\omega\rightarrow 0}\frac{1}{\pi}\sum_{n=1}^{+\infty}
+\Delta\omega_n\int_{-l}^l f(\xi)\cos\omega_n(x-\xi)\dif\xi,
+$$
+其中$\Delta\omega=\Delta\omega_n=\dfrac{\pi}{l}$. \pause 对黎曼积分定义熟悉的读者现在会发现上式右端的和式形式上很像是由含参变量的积分
+\end{frame}
+
+\begin{frame}
+\vspace{-5mm}
+$$
+\int_{-\infty}^{+\infty} f(\xi)\cos\omega(x-\xi)\dif\xi
+$$
+定义的关于$\omega$的函数的积分和式, 只是现在关于$\omega$的积分定义的范围是$[0,\infty)$. \pause 因此我们可猜到取极限后的结果为
+\begin{equation}\label{10.8}
+f(x)=\frac{1}{\pi}\int_0^{+\infty}\!\!\!\!\int_{-\infty}^{+\infty}
+f(\xi)\cos\omega(x-\xi)\dif\xi \mathrm{d}\omega,\quad x\in (-\infty,+\infty).
+\end{equation}
+这个公式称为\textcolor{magenta}{傅里叶积分表示公式}. \pause
+
+\begin{theorem}[傅里叶积分定理]\label{T10.1}
+若$f(x)$在$(-\infty,+\infty)$上绝对可积, 并且在任一有限区间上满足狄利克雷条件,
+则傅里叶积分表示公式\eqref{10.8}在$f(x)$的连续点处成立, 在间断点处右端积分等于$\dfrac{f(x+0)+f(x-0)}{2}$.
+\end{theorem}
+\end{frame}
+
+\begin{frame}
+\qquad 利用
+$$
+\cos\omega(x-\xi)=\cos\omega x\cos\omega\xi+\sin\omega x\sin\omega\xi,
+$$
+傅里叶积分表示公式
+\begin{equation*}
+f(x)=\frac{1}{\pi}\int_0^{+\infty}\!\!\!\!\int_{-\infty}^{+\infty}
+f(\xi)\cos\omega(x-\xi)\dif\xi \mathrm{d}\omega,\quad x\in (-\infty,+\infty) \eqno{\eqref{10.8}}
+\end{equation*}
+可重写为与傅里叶级数展式\eqref{10.7}相对应的形式
+\begin{equation}\label{10.9}
+\color{red} f(x)=\int_{0}^{+\infty}
+\left[A(\omega)\cos\omega x+B(\omega)\sin\omega
+x\right]\mathrm{d}\omega,\quad x\in (-\infty,+\infty),
+\end{equation}
+其中
+\begin{equation*}
+A(\omega)=\frac{1}{\pi} \int_{-\infty}^{+\infty}
+f(x)\cos\omega x \dif x,\quad B(\omega)=\frac{1}{\pi}
+\int_{-\infty}^{+\infty} f(x)\sin\omega x \dif x.
+\end{equation*}
+\end{frame}
+
+
+\lecture{2}{2}
+\section{特征函数展开法和傅里叶变换}
+\begin{frame}
+\textcolor{teal}{\zihao{4}10.1.2 特征函数展开法和傅里叶变换}\spb
+
+\qquad 将
+\begin{equation*}
+\cos\omega(x-\xi)=\frac{1}{2}\left[\me^{\mi\omega(x-\xi)}+\me^{-\mi\omega(x-\xi)}\right],
+\end{equation*}
+代入
+\begin{equation*}
+f(x)=\frac{1}{\pi}\int_0^{+\infty}\!\!\!\!\int_{-\infty}^{+\infty}
+f(\xi)\cos\omega(x-\xi)\dif\xi \mathrm{d}\omega,\quad x\in (-\infty,+\infty) \eqno{\eqref{10.8}}
+\end{equation*}
+中可得
+\begin{align*}
+\onslide<1->{
+f(x) & =\frac{1}{2\pi}\int_{0}^{+\infty}\!\!\!\int_{-\infty}^{+\infty}
+f(\xi)\me^{\mi\omega(x-\xi)}\dif\xi
+\mathrm{d}\omega+\frac{1}{2\pi}\int_{0}^{+\infty}\!\!\!\int_{-\infty}^{+\infty}
+f(\xi)\me^{-\mi\omega(x-\xi)}\dif\xi \mathrm{d}\omega}\\
+\onslide<2->{
+&=\frac{1}{2\pi}\int_{0}^{+\infty}\!\!\!\int_{-\infty}^{+\infty}
+f(\xi)\me^{\mi\omega(x-\xi)}\dif\xi
+\mathrm{d}\omega+\frac{1}{2\pi}\int_{-\infty}^{0}\int_{-\infty}^{+\infty}
+f(\xi)\me^{\mi\omega(x-\xi)}\dif\xi \mathrm{d}\omega,}
+\end{align*}
+\end{frame}
+
+\begin{frame}
+即
+$$
+f(x)=\frac{1}{2\pi}\int_{-\infty}^{+\infty}\!\!\int_{-\infty}^{+\infty}
+f(\xi)\me^{\mi\omega(x-\xi)}\dif\xi \mathrm{d}\omega.
+$$
+这就是\textcolor{magenta}{复数型傅里叶积分表示公式}. \pause 它可重写为
+\begin{equation}\label{10.12}
+f(x)=\frac{1}{2\pi}\int_{-\infty}^{+\infty}\textcolor{red}{\left(\int_{-\infty}^{+\infty}
+f(\xi)\me^{-\mi\omega\xi}\dif\xi\right)}\me^{\mi\omega x}\dif\omega.
+\end{equation}
+这里
+\begin{itemize}
+\item $\{\me^{\mi\omega x}\}_{\omega\in \R}$构成了一个函数坐标系,
+\item 上面的等式是函数$f(x)$在这个坐标系下的展式,
+\item 圆括号中的积分就是它沿坐标轴$\me^{\mi\omega x}$方向的（相差一个常数$1/2\pi$的）坐标分量.
+\end{itemize}
+
+
+\end{frame}
+
+\begin{frame}
+\qquad 考虑非齐次初值问题
+\begin{equation}\label{10.11}
+\left\{
+\begin{array}{ll}
+u_{t}=a^2u_{xx}+f(x,t), & -\infty<x<+\infty,t>0,\\
+u(x,0)=\varphi(x), & -\infty<x<+\infty.
+\end{array}\right.
+\end{equation}\pause
+\qquad 由坐标展式\eqref{10.12}, 可设初值问题\eqref{10.11}的解有如下表示形式
+$$
+u(x,t)=\frac{1}{2\pi}\int_{-\infty}^{+\infty}C(\omega,t)\me^{\mi\omega x}\dif\omega,
+$$
+其中系数
+$$
+C(\omega,t)=\int_{-\infty}^{+\infty}u(\xi,t)\me^{-\mi\omega \xi}\dif\xi
+$$
+是$u(x,t)$作为$x$的函数在函数坐标系$\{\me^{\mi\omega x}\}_{\omega\in \R}$下的坐标（函数）. \pause
+现在求$u(x,t)$的问题就变成了求它的坐标$C(\omega,t)$的问题.
+\end{frame}
+
+\begin{frame}
+\qquad 同时将$f(x,t)$展开为
+$$
+f(x,t)=\frac{1}{2\pi}\int_{-\infty}^{+\infty}F(\omega,t)\me^{\mi\omega
+x}\dif\omega,
+$$
+其中
+$$
+F(\omega,t)=\int_{-\infty}^{+\infty}f(\xi,t)\me^{-\mi\omega \xi}\dif\xi.
+$$\pause
+将上面的这两个展式代入初值问题\eqref{10.11}中的方程$u_t=a^2u_{xx}+f(x,t)$, 可得
+$$
+\frac{1}{2\pi}\int_{-\infty}^{+\infty}\left[\textcolor{red}{\frac{\mathrm{d}}{\mathrm{d}t}C(\omega,t)+a^2\omega^2C(\omega,t)}\right]
+\me^{\mi\omega x}\dif\omega=\frac{1}{2\pi}\int_{-\infty}^{+\infty} \textcolor{red}{F(\omega,t)}\me^{\mi\omega
+x}\dif\omega.
+$$\pause
+等式两端都是在同一坐标系$\{\me^{\mi\omega x}\}_{\omega\in \R}$下的展式, 所以对应的坐标应相等.
+\end{frame}
+
+\begin{frame}
+于是可得常微分方程
+$$
+\frac{\mathrm{d}}{\mathrm{d}t}C(\omega,t)+a^2\omega^2C(\omega,t)=F(\omega,t),
+\quad t>0.
+$$\pause
+利用初值问题\eqref{10.11}中的初始条件$u(x,0)=\varphi(x)$有
+$$
+C(\omega,0)=\int_{-\infty}^{+\infty}u(\xi,0)\me^{-\mi\omega
+\xi}\dif\omega =\int_{-\infty}^{+\infty}\varphi(\xi)\me^{-\mi\omega
+\xi}\dif\omega.
+$$
+因此理论上可以通过求解这个常微分方程初值问题解出$C(\omega,t)$, 从而解得$u(x,t)$.
+\end{frame}
+
+\begin{frame}
+\qquad 现在重新审视一下上面的求解过程, 就会发现要想真正实现这个求解过程,
+我们必须利用$f(x,t)$求出$F(\omega,t)$, 利用$\varphi(x)$求出$C(\omega,0)$和利用$C(\omega,t)$求出$u(x,t)$. \pause
+这就需要计算包含在公式
+\begin{equation*}
+f(x)=\frac{1}{2\pi}\int_{-\infty}^{+\infty}\left(\int_{-\infty}^{+\infty}
+f(\xi)\me^{-\mi\omega\xi}\dif\xi\right)\me^{\mi\omega x}\dif\omega \eqno{\eqref{10.12}}
+\end{equation*}
+中的两个积分公式
+$$
+F(\omega)=\int_{-\infty}^{+\infty} f(x)\me^{-\mi\omega x}\dif x
+\quad\mbox{和}\quad f(x)=\frac{1}{2\pi}\int_{-\infty}^{+\infty}
+F(\omega)\me^{\mi\omega x}\dif\omega.
+$$\pause
+然而, 这两个积分的计算问题并不简单, 我们需要对它们展开专门的讨论. 为此我们引入下面的定义
+\end{frame}
+
+\begin{frame}
+\begin{Definition}\label{D10.1}
+如果定义在$(-\infty,+\infty)$上的函数$f(x)$的傅里叶积分表示公式成立,
+则称
+\begin{equation}\label{10.13}
+\widehat{f}(\omega)=\int_{-\infty}^{+\infty} f(x)\me^{-\mi\omega x}\dif x
+\end{equation}
+为$f(x)$的\textbf{傅里叶变换}\index{傅里叶变换},
+记作$\widehat{f}(\omega)=F[f(x)]$或${F}[f]$; 而称
+\begin{equation}\label{10.14}
+f(x)=\frac{1}{2\pi}\int_{-\infty}^{+\infty}
+\widehat{f}(\omega)\me^{\mi\omega x}\dif\omega
+\end{equation}
+为$\widehat{f}(\omega)$的\textbf{傅里叶逆变换},
+记作$f(x)={F}^{-1}[\widehat{f}(\omega)]$或${F}^{-1}[\widehat{f}]$.
+公式\eqref{10.14}又称为\textbf{傅里叶变换反演公式}.
+\end{Definition}
+\end{frame}
+
+\begin{frame}
+\begin{itemize}
+\item 傅里叶变换公式\eqref{10.13}和逆变换公式\eqref{10.14}中的积分均应理解为柯西主值意义下的广义积分;\pause
+\item 在一些工程学科中, 例如电工学中, 为避免符号上的冲突,
+傅里叶变换和逆变换定义式中的虚数单位$\mi$常改用符号$j$代替;\pause
+\item 在不同的教材上对傅里叶变换的定义常常在形式上有一些差别, 因为傅里叶变换公式\eqref{10.13}和逆变换公式\eqref{10.14}是从傅里叶积分公式
+\begin{equation*}
+f(x)=\frac{1}{2\pi}\int_{-\infty}^{+\infty}\left(\int_{-\infty}^{+\infty}
+f(\xi)\me^{-\mi\omega\xi}\dif\xi\right)\me^{\mi\omega x}\dif\omega \eqno{\eqref{10.12}}
+\end{equation*}
+中拆分出来的, 只要把它们合在一起是傅里叶积分公式\eqref{10.12}就行;
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+一些其他常见的傅里叶变换定义形式：\spb
+\begin{center}
+\begin{tabular}[b]{|l|l|}
+\hline
+傅里叶变换 & 傅里叶逆变换\\ \hline
+$\widehat{f}(\omega)=\dfrac{1}{2\pi}\int_{-\infty}^{+\infty} f(x)\me^{\mi\omega x}\dif x$ &
+$f(x)=\disp\int_{-\infty}^{+\infty} \widehat{f}(\omega)\me^{-\mi\omega x}\dif\omega$\\[4mm] \hline
+$\widehat{f}(\omega)=\dfrac{1}{\sqrt{2\pi}}\int_{-\infty}^{+\infty} f(x)\me^{-\mi\omega x}\dif x$ &
+$f(x)=\dfrac{1}{\sqrt{2\pi}}\int_{-\infty}^{+\infty} \widehat{f}(\omega)\me^{\mi\omega x}\dif\omega$\\[4mm] \hline
+$\widehat{f}(\omega)=\dfrac{1}{\sqrt{2\pi}}\int_{-\infty}^{+\infty} f(x)\me^{\mi\omega x}\dif x$ &
+$f(x)=\dfrac{1}{\sqrt{2\pi}}\int_{-\infty}^{+\infty} \widehat{f}(\omega)\me^{-\mi\omega x}\dif\omega$\\[4mm] \hline
+$\widehat{f}(\omega)=\disp\int_{-\infty}^{+\infty} f(x)\me^{-\mi2\pi\omega x}\dif x$ &
+$f(x)=\disp\int_{-\infty}^{+\infty} \widehat{f}(\omega)\me^{\mi2\pi\omega x}\dif\omega$\\[4mm] \hline
+\end{tabular}
+\end{center}
+最后一行的定义形式与其它的定义形式差别最大, 但只需作变量替换$\eta=2\pi\omega$,
+便可得
+\end{frame}
+
+\begin{frame}
+\begin{align*}
+  \widehat{f}(\omega)&=\int_{-\infty}^{+\infty} f(x)\me^{-\mi2\pi\omega x}\dif x
+  =\int_{-\infty}^{+\infty} f(x)\me^{-\mi\eta x}\dif x=\widetilde{f}(\eta), \\
+  f(x)&=\int_{-\infty}^{+\infty} \widehat{f}(\omega)\me^{\mi2\pi\omega x}\dif\omega
+  =\frac{1}{2\pi}\int_{-\infty}^{+\infty} \widetilde{f}(\eta)\me^{\mi\eta x}\dif\eta.
+\end{align*}
+所以它与本书采用的定义形式是等价的.
+\end{frame}
+
+\begin{frame}
+\begin{center}
+\begin{tikzpicture}
+\draw[thick,stealth-stealth] (-1,0) node[left] {$f(x)$}--(1,0) node[right] {$\widehat{f}(\omega)$};
+\node[magenta] at (-1.5,0.6) {时域};
+\node[magenta] at (1.6,0.6) {频域};
+\node[cyan] at (-1.5,-0.6) {函数};
+\node[cyan] at (1.6,-0.6) {坐标};
+\end{tikzpicture}
+\end{center}
+
+从几何的角度看, \textbf{求一个函数的傅里叶变换就是求它在坐标系$\{\me^{\mi \omega x}\}_{x\in\R}$下的坐标, 而逆变换就是由坐标还原函数的过程.}\pause
+
+\spb\kaishu 这表明傅里叶变换具有明显的几何意义, 但在以往的文献中似乎从未提到过.\pause
+
+\mpb\songti
+\begin{itemize}
+  \item 解析几何是利用空间坐标系把几何空间内的问题转移到坐标空间内讨论,
+  \item 傅里叶变换是把函数空间内的问题转移到坐标空间（也是一个函数空间）内讨论.
+\end{itemize}
+\begin{center}
+\kaishu 两者是一脉相承.
+\end{center}
+\end{frame}
+
+\lecture{3}{3}
+\section{傅里叶变换的基本性质}
+\begin{frame}
+\textcolor{teal}{\zihao{4}10.1.3 傅里叶变换的基本性质}\spb
+
+\qquad 在下文中, 当对一个函数作傅里叶变换时,
+我们总是假定这个函数是满足变换条件的.\pause\spb
+
+\qquad 从算子的观点来看, 出现在定义\ref{D10.1}中的符号$F$和$F^{-1}$都是积分算子.
+利用它们, 傅里叶积分表示公式
+\begin{equation*}
+f(x)=\frac{1}{2\pi}\int_{-\infty}^{+\infty}\left(\textcolor{red}{\int_{-\infty}^{+\infty}
+f(\xi)\me^{-\mi\omega\xi}\dif\xi}\right)\me^{\mi\omega x}\dif\omega \eqno{\eqref{10.12}}
+\end{equation*}
+可重写为
+\begin{equation}\label{10.15}
+F^{-1}\textcolor{red}{F[f]}=f.
+\end{equation}
+
+\spb
+\end{frame}
+
+\begin{frame}
+\setlength\fboxsep{4pt}\setlength\fboxrule{0.5pt}\fbox{\parbox{0.98\textwidth}{
+\textcolor{cyan}{性质1} (线性性质) 由傅里叶变换的定义, 容易验证积分算子$F$是线性算子, 即有
+\begin{equation*}
+F[c_1f_1+c_2f_2]=c_1{F}[f_1]+c_2{F}[f_2]=c_1\widehat{f}_1(\omega)+c_2\widehat{f}_2(\omega),\;c_1,c_2\in \C.
+\end{equation*}
+}}\pause\spb
+
+\qquad 对此式两端同时作傅里叶逆变换, 利用公式
+\begin{equation*}
+F^{-1}\textcolor{red}{F[f]}=f, \eqno{\eqref{10.15}}
+\end{equation*}
+可得
+\begin{equation*}
+F^{-1}[c_1\widehat{f}_1(\omega)+c_2\widehat{f}_2(\omega)]=c_1f_1(x)+c_2f_2(x).
+\end{equation*}
+这说明积分算子$F^{-1}$也是线性算子.\pause\spb
+
+\qquad 对以下每一条傅里叶变换的性质, 都可类似地推出对应的傅里叶逆变换的性质.
+\end{frame}
+
+\begin{frame}
+\setlength\fboxsep{4pt}\setlength\fboxrule{0.5pt}\fbox{\parbox{0.98\textwidth}{
+\textcolor{cyan}{性质2} (位移性质) $F[f(x-a)]=\me^{-\mi a\omega}
+\widehat{f}(\omega),\; a\in\R$.
+}}\pause\spb
+
+\textcolor{cyan}{证~}
+$$
+F[f(x-a)]=\int_{-\infty}^{+\infty} f(x-a)\me^{-\mi\omega
+x}\dif x\mathop{=\!=\!=\!=}\limits^{\xi=x-a}\int_{-\infty}^{+\infty}
+f(\xi)\me^{-\mi\omega (a+\xi)}\dif\xi=\me^{-\mi a\omega} \widehat{f}(\omega).
+\eqno \rule{2.5mm}{4mm}
+$$\pause
+
+如果傅里叶变换的对象是时域上的函数, 当$a>0$时, 这条性质又常被称为是\textcolor{magenta}{延迟性质}.
+\pause\spb
+
+\setlength\fboxsep{4pt}\setlength\fboxrule{0.5pt}\fbox{\parbox{0.98\textwidth}{
+\textcolor{cyan}{性质3} (相似性质) $F[f(kx)]=\dfrac{1}{|k|}
+\widehat{f}\left(\dfrac{\omega}{k}\right),\; k\neq0$.
+}}\pause\spb
+
+\textcolor{cyan}{证~} 需对$k>0$和$k<0$分类讨论, 除此之外, 证明过程完全类似于性质$2$的证明.
+\phantom{1cm}\hfill\rule{2.5mm}{4mm}
+
+\end{frame}
+
+\begin{frame}
+\setlength\fboxsep{4pt}\setlength\fboxrule{0.5pt}\fbox{\parbox{0.98\textwidth}{
+\textcolor{cyan}{性质4} (微分性质) 若$\lim\limits_{x\raw\infty}f(x)=0$, 则$F[f'(x)]=\mi\omega \widehat{f}(\omega)$.
+}}\pause\spb
+
+\textcolor{cyan}{证~} 由分部积分公式有
+$$
+F[f'(x)]=\int_{-\infty}^{+\infty}f'(x)\me^{-\mi\omega x}\dif x=\me^{-\mi\omega
+x}f(x)\Big|_{-\infty}^{+\infty}+\mi\omega\int_{-\infty}^{+\infty}f(x)\me^{-\mi\omega
+x}\dif x=\mi\omega \widehat{f}(\omega). \eqno\rule{2.5mm}{4mm}
+$$\pause\spb
+
+\only<3>{
+\qquad 由傅里叶变换的几何解释, 傅里叶变换把函数空间中的微分运算变成了它的坐标空间中的代数运算（准确地说, 是乘法运算）. 利用傅里叶变换的微分性质,
+\begin{center}
+\heiti 可以把一个偏微分方程转化为常微分方程,
+把一个常微分方程转化为代数方程.
+\end{center}
+因此傅里叶变换自然成为了求解微分方程的重要工具.
+}
+
+\only<4>{
+\qquad 由此出发, 当
+\begin{equation*}
+\lim_{x\raw\infty}f^{(k)}(x)=0,\; k=0,1,2,\cdots,n-1
+\end{equation*}
+时, 利用数学归纳法可证明
+\begin{equation}\label{10.16}
+F[f^{(n)}(x)]=(\mi\omega)^n\widehat{f}(\omega),\; n=1,2,3,\cdots.
+\end{equation}
+}
+\end{frame}
+
+\begin{frame}
+\setlength\fboxsep{4pt}\setlength\fboxrule{0.5pt}\fbox{\parbox{0.98\textwidth}{
+\textcolor{cyan}{性质5} (像函数的微分性质) $F[xf(x)]=\mi\dfrac{\dif}{\dif \omega}
+\widehat{f}(\omega)$.
+}}\pause\spb
+
+\textcolor{cyan}{证~}
+\begin{align*}
+\mi\dfrac{\dif}{\dif\omega} \widehat{f}(\omega)
+&=\mi\frac{\dif}{\dif\omega}\int_{-\infty}^{+\infty}f(x)\me^{-\mi\omega
+x}\dif x
+=\mi\int_{-\infty}^{+\infty}f(x)\frac{\dif}{\dif\omega}\me^{-\mi\omega
+x}\dif x\\
+&=\int_{-\infty}^{+\infty}xf(x)\me^{-\mi\omega x}\dif x=F[xf(x)]. \tag*{\rule{2.5mm}{4mm}}
+\end{align*}
+
+
+\only<3>{
+这条性质表明, 虽然函数空间中的微分运算通过傅里叶变换可以变为坐标空间中的代数运算,
+但函数空间中的一些代数运算却通过傅里叶变换变为坐标空间中的微分运算.\spb
+
+考虑到傅里叶变换和逆变换的定义可以交换, 这条性质和微分性质实质上是一回事.
+}
+
+\only<4>{
+不难用数学归纳法证明
+$$
+F[x^nf(x)]=\mi^n\dfrac{\dif^{\,n}}{\dif\omega^n} \widehat{f}(\omega), \quad
+n=1,2,\cdots.
+$$
+}
+\end{frame}
+
+\begin{frame}
+\setlength\fboxsep{4pt}\setlength\fboxrule{0.5pt}\fbox{\parbox{0.98\textwidth}{
+\textcolor{cyan}{性质6} (积分性质)
+$F\left[\disp\int_{-\infty}^xf(\xi)\dif\xi\right]=\dfrac{1}{\mi\omega}
+\widehat{f}(\omega)$.
+}}\pause\spb
+
+\only<2,3,4>{
+\textcolor{cyan}{证~} 因为
+\begin{equation*}
+ \int_{-\infty}^xf(\xi)\dif\xi=\int_0^xf(\xi)\dif\xi+\int_{-\infty}^0 f(\xi)\dif\xi,
+\end{equation*}
+所以它是$f(x)$的一个原函数. } \only<3,4>{于是有
+$$
+\frac{\dif}{\dif x}\int_{-\infty}^xf(\xi)\dif\xi=f(x).
+$$} \only<4>{
+利用微分性质可得
+$$
+\widehat{f}(\omega)=F[f(x)]=F\left[\frac{\dif}{\dif x}\int_{-\infty}^xf(\xi)\dif\xi\right]=\mi\omega
+F\left[\disp\int_{-\infty}^xf(\xi)\dif\xi\right].
+$$
+两端同除以$\mi\omega$即得所证.\myend}
+
+ \only<5>{
+\setlength\fboxsep{4pt}\setlength\fboxrule{0.5pt}\fbox{\parbox{0.98\textwidth}{
+\textcolor{cyan}{性质4} (微分性质) 若$\lim\limits_{x\raw\infty}f(x)=0$, 则$F[f'(x)]=\mi\omega \widehat{f}(\omega)$.
+}}\mpb
+
+\qquad 由傅里叶变换的几何解释,
+傅里叶变换把{\heiti 函数空间中的微积分运算}变成了它的{\heiti 坐标空间中的乘除法运算}.
+微分和积分原本隐藏着的互逆运算关系, 在坐标空间中却被以如此直接的方式呈现出来了.\spb
+
+这说明将函数空间中的问题转换到坐标空间中（即对函数作傅里叶变换）来讨论可能会简化原来的问题.
+这正是傅里叶变换有着非常广泛的应用的原因.
+}
+\end{frame}
+
+\begin{frame}
+\qquad 下面为了引出函数的卷积概念, 我们先讨论一下两个函数的乘积的傅里叶级数. \pause
+设$f(x)$和$g(x)$都是以$2\pi$为周期的函数, 它们的傅里叶级数分别为
+\begin{equation*}
+  f(x)=\sum_{k=-\infty}^{+\infty}\widehat{f}_k\me^{\mi kx},\quad g(x)=\sum_{m=-\infty}^{+\infty}\widehat{g}_m\me^{\mi mx}.
+\end{equation*}\pause
+记$h(x)=f(x)g(x)$, 则有
+\begin{equation*}
+  h(x)=\left(\sum_{k=-\infty}^{+\infty}\widehat{f}_k\me^{\mi kx}\right)\left(\sum_{m=-\infty}^{+\infty}\widehat{g}_m\me^{\mi mx}\right)
+  =\sum_{k=-\infty}^{+\infty}\sum_{m=-\infty}^{+\infty}\widehat{f}_k\widehat{g}_m\me^{\mi (k+m)x}.
+\end{equation*}
+令$n=k+m$, 则$k=n-m$, 于是有
+\begin{equation*}
+  h(x)=\sum_{n=-\infty}^{+\infty}\left(\sum_{m=-\infty}^{+\infty}\widehat{f}_{n-m}\widehat{g}_m\right)\me^{\mi nx}.
+\end{equation*}
+\end{frame}
+
+\begin{frame}
+所以$h(x)$的傅里叶级数的系数$\widehat{h}_n$为
+\begin{equation*}
+ \widehat{h}_n=\sum_{m=-\infty}^{+\infty}\widehat{f}_{n-m}\widehat{g}_m,\quad n=0,\pm1,\pm2,\cdots.
+\end{equation*}
+我们称数列$\{\widehat{h}_n\}$为数列$\{\widehat{f}_n\}$和$\{\widehat{g}_n\}$的\textcolor{magenta}{卷积}.\pause\spb
+
+
+\qquad 我们看到有限区间上的函数空间中的函数乘积在坐标空间中变成了相应坐标序列的卷积.
+这一性质对整个实数轴上的函数仍成立, 只是这时函数的坐标由序列变成了函数.
+因此我们需要定义函数的卷积概念.
+
+\end{frame}
+
+\begin{frame}
+\begin{Definition}\label{D10.2}\index{卷积}
+设函数$f$和$g$在$(-\infty,+\infty)$上有定义. 如果积分
+$$
+\int_{-\infty}^{+\infty} f(x-t)g(t)\dif t
+$$
+对所有的$x\in(-\infty,+\infty)$都收敛, 则称由该积分定义的函数为$f$与$g$的卷积,
+记为
+$$
+f\ast g(x)=\int_{-\infty}^{+\infty} f(x-t)g(t)\dif t.
+$$
+\end{Definition}\pause\spb
+
+\setlength\fboxsep{4pt}\setlength\fboxrule{0.5pt}\fbox{\parbox{0.98\textwidth}{
+\textcolor{cyan}{性质7} (卷积性质)
+$F[f\ast
+g(x)]=\widehat{f}(\omega)\widehat{g}(\omega),\;F[f(x)
+g(x)]=\dfrac{1}{2\pi}\widehat{f}\ast\widehat{g}(\omega)$.
+}}
+\end{frame}
+
+\begin{frame}
+\textcolor{cyan}{证~}
+\begin{align}
+F[f\ast
+g(x)]&=\int_{-\infty}^{+\infty}\!\!\int_{-\infty}^{+\infty}f(x-t)g(t)\dif t\,\me^{-\mi\omega
+x}\dif x \notag\\
+&=\int_{-\infty}^{+\infty}\!\!\int_{-\infty}^{+\infty}f(x-t)\me^{-\mi\omega
+x}\dif x\,g(t)\dif t\quad(\text{交换积分次序}) \notag\\
+&=\int_{-\infty}^{+\infty}\widehat{f}(\omega)\me^{-\mi\omega
+t}g(t)\dif t\quad(\mbox{利用位移性质}) \notag \\
+&=\widehat{f}(\omega)\widehat{g}(\omega). \notag
+\end{align}
+\end{frame}
+
+\begin{frame}
+\vspace{-6mm}
+\begin{align}
+F[f(x)g(x)]&=\int_{-\infty}^{+\infty}f(x)g(x)\me^{-\mi\omega x}\dif x
+\notag\\
+&=\int_{-\infty}^{+\infty}f(x)\left[\frac{1}{2\pi}\int_{-\infty}^{+\infty}\widehat{g}(\mu)\me^{\mi\mu
+x}\dif\mu\right] \me^{-\mi\omega x}\dif x \notag\\
+&=\frac{1}{2\pi}\int_{-\infty}^{+\infty}\widehat{g}(\mu)\left[\int_{-\infty}^{+\infty}
+f(x)\me^{-\mi(\omega-\mu) x}\dif x\right]\mathrm{d}\mu\quad(\mbox{交换积分次序}) \notag\\
+&=\frac{1}{2\pi}\int_{-\infty}^{+\infty}\widehat{g}(\mu)\widehat{f}(\omega-\mu)\dif\mu
+=\frac{1}{2\pi}\widehat{f}\ast\widehat{g}(\omega).\tag*{\rule{2.5mm}{4mm}}
+\end{align}
+\end{frame}
+
+\begin{frame}
+\setlength\fboxsep{4pt}\setlength\fboxrule{0.5pt}\fbox{\parbox{0.98\textwidth}{
+\textcolor{cyan}{性质7} (卷积性质)
+$F[f\ast
+g(x)]=\widehat{f}(\omega)\widehat{g}(\omega),\;F[f(x)
+g(x)]=\dfrac{1}{2\pi}\widehat{f}\ast\widehat{g}(\omega)$.
+}}\spb
+
+\qquad 对一些难以直接求出它的傅里叶逆变换的函数, 如果能将其看作是一些简单函数的乘积形式,
+利用卷积性质, 就可能求出它的傅里叶逆变换.\pause\spb
+
+\qquad 我们看到函数的卷积与函数的乘积分别是函数空间和它的坐标空间中相对应的两种函数运算,
+所以函数的乘积应满足的运算律, 函数的卷积也应满足. \pause 由此可知函数的卷积服从如下的运算律:
+\begin{center}
+\begin{minipage}{0.5\textwidth}
+(1) 交换律: $f\ast g=g\ast f$;
+
+(2) 结合律: $f\ast(g\ast h)=(f\ast g)\ast h$;
+
+(3) 分配律: $f\ast(g+h)=f\ast g+f\ast h$.
+\end{minipage}
+\end{center}
+这些运算律的证明留给读者完成. 函数的卷积是继加减乘除、复合等函数运算之后又一重要的函数运算.
+\end{frame}
+
+\begin{frame}
+\qquad 下面我们利用傅里叶变换的定义与性质求几个具体的函数的傅里叶变换.
+
+\begin{example}\label{E10.1}
+设
+$$
+f_1(x)=\left\{
+\begin{array}{ll}
+1, & |x|\leq A,\\
+0, & |x|>A.
+\end{array}\right.
+$$
+求$\widehat{f}_1(\omega)$.
+\end{example}
+
+\textcolor{cyan}{解}~ 由傅里叶变换的定义有
+$$
+\widehat{f}_1(\omega)=\int_{-A}^{A}\me^{-\mi\omega
+x}\dif x=2\frac{\sin\omega A}{\omega}. \eqno\rule{2.5mm}{4mm}
+$$\pause
+
+\qquad 这个例题的结果可以用于一维波动方程初值问题的求解, 见例\ref{E10.7}.
+\end{frame}
+
+\begin{frame}
+\begin{example}\label{E10.2}
+设
+$$
+f_2(x)=\left\{
+\begin{array}{ll}
+\me^{-kx}(k>0), & x\geq 0,\\
+0, & x<0.
+\end{array}\right.
+$$
+求$\widehat{f}_2(\omega)$.
+\end{example}
+
+\textcolor{cyan}{解}~ 由傅里叶变换的定义有
+$$
+\widehat{f}_2(\omega)=\int_{0}^{+\infty}\me^{-(k+\mi\omega)
+x}\dif x=\frac{1}{k+\mi\omega}. \eqno\rule{2.5mm}{4mm}
+$$
+\end{frame}
+
+\begin{frame}
+
+\begin{example}\label{E10.3}
+设$f_3(x)=\me^{-k|x|}(k>0)$, 求$\widehat{f}_3(\omega)$.
+\end{example}
+
+\textcolor{cyan}{解}~ 由于$f_3(x)=f_2(x)+f_2(-x)$, 由线性性质和相似性质有
+$$
+\widehat{f}_3(\omega)=\widehat{f}_2(\omega)+\widehat{f}_2(-\omega)
+=\frac{1}{k+\mi\omega}+\frac{1}{k-\mi\omega}=\frac{2k}{k^2+\omega^2}. \eqno\rule{2.5mm}{4mm}
+$$%\pause\spb
+
+%\qquad 这个例子的结果可用于上半平面的拉普拉斯方程边值问题求解中, 见例\ref{E10.8}.
+
+\begin{example}\label{E10.4}
+设$f_4(x)=\me^{-x^2}$, 求$\widehat{f}_4(\omega)$.
+\end{example}
+
+\textcolor{cyan}{解}~ 利用分部积分公式和像函数的微分性质有
+
+\end{frame}
+
+\begin{frame}
+\vspace{-4mm}
+\begin{align*}
+\widehat{f}_4(\omega) & =\disp\int_{-\infty}^{+\infty}\me^{-x^2}\me^{-\mi\omega x}\dif x
+=\frac{-1}{\mi\omega}\left[\me^{-x^2}\me^{-\mi\omega
+x}\Big|_{-\infty}^{+\infty}+2\int_{-\infty}^{+\infty}x\me^{-x^2}\me^{-\mi\omega
+x}\dif x\right]\\
+&=\disp\frac{2\mi}{\omega}F[xf_4(x)]=-\frac{2}{\omega}\frac{\dif}{\dif\omega}\widehat{f}_4(\omega).
+\end{align*}\pause
+或者直接计算可得$f_4'(x)=-2x\me^{-x^2}=-2xf_4(x)$, 对两端作傅里叶变换,
+由微分性质和像函数的微分性质同样可得上式. \pause 所以$\widehat{f}_4(\omega)$满足
+$$
+\left\{
+\begin{array}{l}
+\dfrac{\dif}{\dif\omega}\widehat{f}_4(\omega)=-\frac{\omega}{2}\widehat{f}_4(\omega),\\[3mm]
+\widehat{f}_4(0)=\disp\int_{-\infty}^{+\infty}\me^{-x^2}\dif x=\sqrt{\pi}.
+\end{array}\right.
+$$\pause
+利用分离变量法可解得
+$$
+\widehat{f}_4(\omega)=\sqrt{\pi}\,\me^{-\frac{\omega^2}{4}}. \eqno\rule{2.5mm}{4mm}
+$$
+\end{frame}
+
+\begin{frame}
+\begin{example}
+设$f_5(x)=\me^{-Ax^2}\,(A>0)$, 求$\widehat{f}_5(\omega)$.
+\end{example}
+
+\textcolor{cyan}{解}~ 注意到$f_5(x)=f_4(\sqrt{A}x)$, 由相似性质有
+$$
+\widehat{f}_5(\omega)=\frac{1}{\sqrt{A}}\widehat{f}_4\left(\frac{\omega}{\sqrt{A}}\right)
+=\sqrt{\frac{\pi}{A}}\,\me^{-\frac{\omega^2}{4A}}. \eqno\rule{2.5mm}{4mm}
+$$\pause
+
+若取$A=\dfrac{1}{4a^2t}\,(a,t>0)$, 则有
+$$
+F\left[\me^{-\frac{x^2}{4a^2t}}\right]=2a\sqrt{\pi
+t}\,\me^{-a^2\omega^2t}.
+$$
+两边作傅里叶逆变换可得
+\end{frame}
+
+\begin{frame}
+\begin{equation}\label{10.17}
+\color{red} F^{-1}\left[\me^{-a^2\omega^2t}\right]=\frac{1}{2a\sqrt{\pi
+t}}\,\me^{-\frac{x^2}{4a^2t}}.
+\end{equation}
+这个公式将用于热传导方程初值问题的傅里叶变换解法中, 见例\ref{E10.6}.
+\end{frame}
+
+
+\lecture{4}{4}
+\section{求解偏微分方程定解问题的傅里叶变换法}
+\begin{frame}
+\textcolor{teal}{\zihao{4}10.1.4 求解偏微分方程定解问题的傅里叶变换法}\spb
+
+\qquad 前面定义傅里叶变换和讨论其性质时, 我们都是针对一元函数进行的,
+但偏微分方程中的未知函数却是多元函数. 下面我们以二元函数$u(x,t)$为例来说明如何对多元函数关于某个自变量作傅里叶变换, 其中$-\infty<x<+\infty,t>0$. \pause\spb
+
+\qquad 当存在多个自变量时, 首先应考虑要关于哪个自变量作傅里叶变换. 就$u(x,t)$而言,
+其自变量$x$和$t$的变化范围决定了只能关于$x$作傅里叶变换.
+\end{frame}
+
+\begin{frame}
+\qquad 固定$t$,
+$u(x,t)$就成了关于$x$的一元函数, 所以可对$u(x,t)$关于$x$作傅里叶变换,
+我们有
+$$
+\widehat{u}(\omega,t)=F[u(x,t)]=\int_{-\infty}^{+\infty}u(x,t)\me^{-\mi\omega
+x}\dif x.
+$$\pause
+对$\widehat{u}(\omega,t)$关于$t$求导可得
+$$
+\frac{\mathrm{d}}{\mathrm{d}t}\widehat{u}(\omega,t)=\frac{\mathrm{d}}{\mathrm{d}t}\int_{-\infty}^{+\infty}u(x,t)\me^{-\mi\omega
+x}\dif x=\int_{-\infty}^{+\infty}\pp{}{t}u(x,t)\me^{-\mi\omega x}\dif x.
+$$\pause
+也就是说,
+$$
+F\left[\pp{}{t}u(x,t)\right]=\frac{\mathrm{d}}{\mathrm{d}t}\widehat{u}(\omega,t).
+$$
+\end{frame}
+
+\begin{frame}
+对$\widehat{u}(\omega,t)$关于$t$继续求导可得
+$$
+F\left[\pp{^n}{t^n}u(x,t)\right]=\frac{\dif^{\,n}}{\dif t^n}\widehat{u}(\omega,t),\quad
+n=1,2,\cdots.
+$$\pause
+此外, 由公式
+\begin{equation*}
+F[f^{(n)}(x)]=(\mi\omega)^n\widehat{f}(\omega),\; n=1,2,3,\cdots \eqno{(10.15)}
+\end{equation*}
+有
+$$
+F\left[\pp{^n}{x^n}u(x,t)\right]=(\mi\omega)^n\widehat{u}(\omega,t),\quad
+n=1,2,\cdots.
+$$
+\end{frame}
+
+\begin{frame}
+\begin{example}\label{E10.6}
+求解一维热传导方程初值问题
+\begin{equation}\label{10.18}
+\left\{
+\begin{array}{ll}
+u_{t}=a^2u_{xx}+f(x,t), & -\infty<x<+\infty,t>0,\\
+u(x,0)=\varphi(x), & -\infty<x<+\infty.
+\end{array}\right.
+\end{equation}
+\end{example}
+
+\spb\textcolor{cyan}{解~} 对方程及初始条件两端都关于$x$作傅里叶变换.
+记
+$$
+\widehat{u}(\omega,t)=F[u],\; \widehat{f}(\omega,t)=F[f],\; \widehat{\varphi}(\omega)=F[\varphi],
+$$\pause
+由微分性质和线性性质有
+$$
+\left\{
+\begin{array}{l}
+\dfrac{\mathrm{d}}{\mathrm{d}t}\widehat{u}(\omega,t)=-a^2\omega^2\widehat{u}(\omega,t)+\widehat{f}(\omega,t),
+\quad t>0,\\[3mm]
+\widehat{u}(\omega,0)=\widehat{\varphi}(\omega).
+\end{array}\right.
+$$
+\end{frame}
+
+\begin{frame}
+\vspace{-5mm}
+$$
+\left\{
+\begin{array}{l}
+\dfrac{\mathrm{d}}{\mathrm{d}t}\widehat{u}(\omega,t)=-a^2\omega^2\widehat{u}(\omega,t)+\widehat{f}(\omega,t),
+\quad t>0,\\[3mm]
+\widehat{u}(\omega,0)=\widehat{\varphi}(\omega),
+\end{array}\right.
+$$
+其中的$\omega$视为参数. 利用常数变易法解此一阶常微分方程初值问题得
+$$
+\widehat{u}(\omega,t)=\widehat{\varphi}(\omega)\me^{-a^2\omega^2t}
++\int_0^t\widehat{f}(\omega,\tau)\me^{-a^2\omega^2(t-\tau)}\dif\tau.
+$$\pause
+现在, 只需对$\widehat{u}(\omega,t)$作傅里叶逆变换便可得到初值问题\eqref{10.18}的解$u(x,t)$.
+于是
+$$
+u(x,t)=F^{-1}[\widehat{u}(\omega,t)]=F^{-1}\left[\widehat{\varphi}(\omega)\me^{-a^2\omega^2t}\right]
++F^{-1}\left[\int_0^t\widehat{f}(\omega,\tau)\me^{-a^2\omega^2(t-\tau)}\dif\tau\right].
+$$\pause
+由卷积性质和公式\eqref{10.17}有
+$$
+F^{-1}\left[\widehat{\varphi}(\omega)\me^{-a^2\omega^2t}\right]=
+\varphi(x)\ast \frac{1}{2a\sqrt{\pi t}}\,\me^{-\frac{x^2}{4a^2t}}=
+\frac{1}{2a\sqrt{\pi
+t}}\int_{-\infty}^{+\infty}\varphi(\xi)\me^{-\frac{(x-\xi)^2}{4a^2t}}\dif\xi
+$$
+\end{frame}
+
+\begin{frame}
+
+和
+\begin{align*}
+\onslide<1->{
+F^{-1}\left[\int_0^t\widehat{f}(\omega,\tau)\me^{-a^2\omega^2(t-\tau)}\dif\tau\right]
+&=\dfrac{1}{2\pi}\int_{-\infty}^{+\infty}\left[\int_0^t\widehat{f}(\omega,\tau)
+\me^{-a^2\omega^2(t-\tau)}\dif\tau\right]\me^{\mi\omega x}\dif\omega}\\
+\onslide<2->{
+&=\int_0^t\left[\frac{1}{2\pi}\int_{-\infty}^{+\infty}\widehat{f}(\omega,\tau)
+\me^{-a^2\omega^2(t-\tau)}\me^{\mi\omega x}\dif\omega\right]\mathrm{d}\tau}\\
+\onslide<3->{
+&=\int_0^tF^{-1}\left[\widehat{f}(\omega,\tau)\me^{-a^2\omega^2(t-\tau)}\right]\mathrm{d}\tau}\\
+\onslide<4->{
+&=\int_0^tf(x,\tau)\ast F^{-1}\left[\me^{-a^2\omega^2(t-\tau)}\right]\mathrm{d}\tau}\\
+\onslide<5->{
+&=\int_0^t\int_{-\infty}^{+\infty}\frac{f(\xi,\tau)}{2a\sqrt{\pi(t-\tau)}}
+\me^{-\frac{(x-\xi)^2}{4a^2(t-\tau)}}\dif\xi \mathrm{d}\tau.}
+\end{align*}
+\end{frame}
+
+\begin{frame}
+所以
+\begin{equation}\label{10.19}
+u(x,t)=\frac{1}{2a\sqrt{\pi
+t}}\int_{-\infty}^{+\infty}\varphi(\xi)\me^{-\frac{(x-\xi)^2}{4a^2t}}\dif\xi+
+\int_0^t\int_{-\infty}^{+\infty}\frac{f(\xi,\tau)}{2a\sqrt{\pi(t-\tau)}}
+\me^{-\frac{(x-\xi)^2}{4a^2(t-\tau)}}\dif\xi \mathrm{d}\tau.
+\end{equation}\pause
+
+\qquad 特别地, 齐次初值问题
+\begin{equation*}
+\left\{
+\begin{array}{ll}
+u_{t}=a^2u_{xx}, & -\infty<x<+\infty,t>0,\\
+u(x,0)=\varphi(x), & -\infty<x<+\infty
+\end{array}\right. \eqno{\eqref{10.1}}
+\end{equation*}
+有解
+\begin{equation*}
+u(x,t)=\frac{1}{2a\sqrt{\pi
+t}}\int_{-\infty}^{+\infty}\varphi(\xi)\me^{-\frac{(x-\xi)^2}{4a^2t}}\dif\xi.
+\end{equation*}\pause
+它与前面我们用分离变量法得到的解的形式大不相同, 怎么回事？
+\end{frame}
+
+\begin{frame}
+乍一看会觉得两者的解似乎不同, 但可以证明它们其实是相同的. \pause
+\begin{align*}
+&\phantom{=\;}u(x,t)\\
+&=\int_{0}^{+\infty}\me^{-a^2\omega^2t}[A(\omega)\cos\omega
+x+B(\omega)\sin\omega x]\dif\omega\\ &=
+\int_{0}^{+\infty}\me^{-a^2\omega^2t}\left[\frac{A(\omega)-\mi B(\omega)}{2}\me^{\mi\omega
+x}+\frac{A(\omega)+\mi B(\omega)}{2}\me^{-\mi\omega x}\right]\mathrm{d}\omega\\
+&=\frac{1}{2}\int_0^{+\infty}\me^{-a^2\omega^2t}[A(\omega)-\mi B(\omega)]\me^{\mi \omega x}\dif\omega+
+\frac{1}{2}\int_0^{+\infty}\me^{-a^2\omega^2t}[A(\omega)+\mi B(\omega)]\me^{-\mi \omega x}\dif\omega \\
+&=\frac{1}{2}\int_0^{+\infty}\me^{-a^2\omega^2t}[A(\omega)-\mi B(\omega)]\me^{\mi \omega x}\dif\omega+
+\frac{1}{2}\int_{-\infty}^0\me^{-a^2\omega^2t}[A(-\omega)+iB(-\omega)]\me^{\mi \omega x}\dif\omega \\
+&=\frac{1}{2}\int_{-\infty}^{+\infty}\me^{-a^2\omega^2t}\left[A(\omega)-\mi B(\omega)\right]\me^{\mi\omega
+x}\dif\omega.
+\end{align*}
+\end{frame}
+
+\begin{frame}
+由
+\begin{equation*}
+A(\omega)=\frac{1}{\pi} \int_{-\infty}^{+\infty}
+\varphi(x)\cos\omega x \dif x,\quad B(\omega)=\frac{1}{\pi}
+\int_{-\infty}^{+\infty} \varphi(x)\sin\omega x \dif x
+\end{equation*}
+可知
+\begin{equation*}
+A(\omega)-\mi B(\omega)=\frac{1}{\pi} \int_{-\infty}^{+\infty}
+\varphi(x)(\cos\omega x-\mi\sin\omega x) \dif x=\frac{1}{\pi}\int_{-\infty}^{+\infty}
+\varphi(x)\me^{-\mi\omega x}\dif x=\frac{1}{\pi}\widehat{\varphi}(\omega),
+\end{equation*}
+所以
+\begin{equation*}
+u(x,t)= F^{-1}[\widehat{\varphi}(\omega)\me^{-a^2\omega^2t}].
+\end{equation*}\pause
+
+\qquad 由此可知, 两者的解的形式之所以不同, 是因为分离变量法的求解是不彻底的. \pause
+如果去掉作傅里叶逆变换的步骤, 傅里叶变换法显然比分离变量法要简单的多.
+所以今后{\heiti 遇到初值问题, 建议使用傅里叶变换法求解, 而不再使用分离变量法求解}.
+\end{frame}
+
+\begin{frame}
+\qquad 观察
+\begin{equation*}
+\left\{
+\begin{array}{ll}
+u_{t}=a^2u_{xx}, & -\infty<x<+\infty,t>0,\\
+u(x,0)=\varphi(x), & -\infty<x<+\infty
+\end{array}\right.
+\end{equation*}
+的解
+\begin{equation*}
+u(x,t)=\frac{1}{2a\sqrt{\pi
+t}}\int_{-\infty}^{+\infty}\varphi(\xi)\me^{-\frac{(x-\xi)^2}{4a^2t}}\dif\xi.
+\end{equation*}
+设在$(x_0-\delta,x_0+\delta)$上$\varphi(x)>0$,
+由上面的解的公式可知, 在任一时刻$t>0$,
+杆上任意一点$x$处的温度$u(x,t)$均大于$0$. \pause
+\begin{itemize}
+\item 这说明热量瞬间就可以从区间$(x_0-\delta,x_0+\delta)$传到杆上的每一点.
+\item 由此可知热量传播的速度是无穷大.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\qquad 应当指出, {\heiti 在现实中, 热量并不是以无限大的速度传播的},
+只是因为在热传导方程建模的过程中, 我们依据的热传导定律是一种统计规律,
+没有考虑分子运动的惯性, 才导致得出了热量传播的速度是无穷大的结论. \pause\spb
+
+当$t>0$不是很小, 统计规律已经开始起作用时, 解
+\begin{equation*}
+u(x,t)=\frac{1}{2a\sqrt{\pi
+t}}\int_{-\infty}^{+\infty}\varphi(\xi)\me^{-\frac{(x-\xi)^2}{4a^2t}}\dif\xi.
+\end{equation*}
+是可接受的.
+\end{frame}
+
+\begin{frame}
+\begin{example}\label{E10.7}
+求解一维波动方程初值问题
+\begin{equation*}
+\left\{
+\begin{array}{ll}
+u_{tt}=a^2u_{xx}, & -\infty<x<+\infty,t>0,\\
+u(x,0)=\varphi(x),u_t(x,0)=\psi(x), & -\infty<x<+\infty.
+\end{array}\right.
+\end{equation*}
+\end{example}
+
+\textcolor{cyan}{解~} 对方程及初始条件关于$x$作傅里叶变换,
+记
+$$
+\widehat{u}(\omega,t)=F[u],\;\widehat{\varphi}(\omega)=F[\varphi],\;\widehat{\psi}(\omega)=F[\psi],
+$$
+则有
+$$
+\left\{
+\begin{array}{l}
+\dfrac{\dif^{\,2}}{\dif t^2}\widehat{u}(\omega,t)=-a^2\omega^2\widehat{u}(\omega,t),
+\quad t>0,\\[3mm]
+\widehat{u}(\omega,0)=\widehat{\varphi}(\omega),\widehat{u}_t(\omega,0)=\widehat{\psi}(\omega).
+\end{array}\right.
+$$
+\end{frame}
+
+\begin{frame}
+解得
+$$
+\widehat{u}(\omega,t)=\widehat{\varphi}(\omega)\cos a\omega
+t+\frac{1}{a\omega}\widehat{\psi}(\omega)\sin a\omega t.
+$$\pause
+现在只需求出它的傅里叶逆变换, 我们有
+$$
+u(x,t)=F^{-1}[\widehat{u}(\omega,t)]=F^{-1}[\widehat{\varphi}(\omega)\cos
+a\omega t]+F^{-1}\left[\frac{1}{a\omega}\widehat{\psi}(\omega)\sin
+a\omega t\right].
+$$\pause
+利用欧拉公式和位移性质有
+$$
+F^{-1}[\widehat{\varphi}(\omega)\cos a\omega
+t]=\frac{1}{2}F^{-1}\left[\widehat{\varphi}(\omega)\left(\me^{\mi a\omega
+t}+\me^{-\mi a\omega t}\right)\right]=\frac{1}{2}[\varphi(x+at)+\varphi(x-at)].
+$$\pause
+利用例\ref{E10.1}的结果, 可以计算
+$$
+F^{-1}\left[\frac{1}{a\omega}\widehat{\psi}(\omega)\sin a\omega t\right].
+$$
+\end{frame}
+
+\begin{frame}
+不用例\ref{E10.1}的结果的话, 可以将$\dfrac{1}{a\omega}\widehat{\psi}(\omega)\sin a\omega t$重写为
+$$
+\frac{1}{a\omega}\widehat{\psi}(\omega)\sin a\omega t=
+\frac{1}{2a\mi\omega}\widehat{\psi}(\omega)\left(\me^{\mi a\omega
+t}-\me^{-\mi a\omega t}\right).
+$$\pause
+于是利用积分性质和位移性质有
+\begin{align*}
+\onslide<2->{
+F^{-1}\left[\dfrac{1}{a\omega}\widehat{\psi}(\omega)\sin a\omega t\right]
+&= F^{-1}\left[\dfrac{1}{2a\mi\omega}\widehat{\psi}(\omega)\left(\me^{\mi
+a\omega t}-\me^{-\mi a\omega t}\right)\right]}\\
+\onslide<3->{
+&=\dfrac{1}{2a}\int_{-\infty}^x
+F^{-1}[\widehat{\psi}(\omega)\left(\me^{\mi a\omega t}-\me^{-\mi a\omega t}\right)]\dif\xi}\\
+\onslide<4->{
+&=\dfrac{1}{2a}\int_{-\infty}^x[\psi(\xi+at)-\psi(\xi-at)]\dif\xi}\\
+\onslide<5->{
+&=\dfrac{1}{2a}\left(\int_{-\infty}^x\psi(\xi+at)\dif\xi-\int_{-\infty}^x\psi(\xi-at)\dif\xi\right)}
+\end{align*}
+\end{frame}
+
+\begin{frame}
+\begin{align*}
+\onslide<1->{
+F^{-1}\left[\dfrac{1}{a\omega}\widehat{\psi}(\omega)\sin a\omega t\right]
+&=\dfrac{1}{2a}\left(\int_{-\infty}^x\psi(\xi+at)\dif\xi-\int_{-\infty}^x\psi(\xi-at)\dif\xi\right)}\\
+\onslide<2->{
+&=\dfrac{1}{2a}\left(\int_{-\infty}^{x+at}\psi(\xi)\dif\xi-\int_{-\infty}^{x-at}\psi(\xi)\dif\xi\right)}\\
+\onslide<3->{
+&=\dfrac{1}{2a}\int_{x-at}^{x+at}\psi(\xi)\dif\xi.}
+\end{align*}
+\onslide<4->{
+因此解为
+\begin{equation}\label{10.22}
+u(x,t)=\frac{1}{2}[\varphi(x+at)+\varphi(x-at)]+\dfrac{1}{2a}\int_{x-at}^{x+at}\psi(\xi)\dif\xi.
+\end{equation}
+这就是著名的波动方程的{\heiti 达朗贝尔公式}.}
+\end{frame}
+
+\begin{frame}
+\qquad 使用傅里叶变换法求解定解问题, 最困难的地方往往在于最后一步, 即求逆变换之时.
+为求出解的傅里叶逆变换, 需要灵活应用傅里叶变换的性质. 若实在无法求出逆变换,
+那么利用逆变换公式
+\begin{equation*}
+f(x)=\frac{1}{2\pi}\int_{-\infty}^{+\infty}
+\widehat{f}(\omega)\me^{\mi\omega x}\dif\omega
+\end{equation*}
+表示出来的解的形式也是可以接受的.\pause\spb
+
+\qquad 在应用傅里叶变换求解问题时, 对那些需要作傅里叶变换的函数,
+我们并不是很在意它们是否满足傅里叶变换的条件(实际上, 事先也往往无法判断),
+而是在通过傅里叶变换求得的形式解后, 再验证其是否为方程的解.
+
+\end{frame}
+
+
+\lecture{5}{5}
+\section{多重傅里叶变换及其应用}
+\begin{frame}
+\textcolor{teal}{\zihao{4}10.1.5 多重傅里叶变换及其应用}\spb
+
+\qquad 如同傅里叶级数可以推广到多元函数情形一样（见8.6.3小节）,
+作为它的连续版本, 傅里叶变换自然也可以推广到多元函数的情形.\pause\spb
+
+\qquad 下面我们以定义在整个平面上的二元实函数$u(x_1,x_2)$为例来说明推广的基本思路. \pause
+先对$u(x_1,x_2)$关于$x_1$作傅里叶变换, 有
+$$
+\widehat{u}(\omega_1,x_2)=\int_{-\infty}^{+\infty}u(x_1,x_2)\me^{-\mi\omega_1x_1}\dif x_1,
+$$
+注意这里把$x_2$看作参数（我们也可以关于$x_2$作傅里叶变换,
+而把$x_1$看作参数）. \pause 变换后的函数$\widehat{u}(\omega_1,x_2)$
+又是一个定义在整个平面上的二元函数, 对它可以再作傅里叶变换.
+只是$\widehat{u}(\omega_1,x_2)$一般是复值函数.
+所以需先将傅里叶变换推广到实自变量复值函数的情形.
+\end{frame}
+
+\begin{frame}
+\qquad 设$f(x)$是一个实自变量复值函数, 则它可以写成
+$$
+f(x)=f_1(x)+\mi f_2(x)
+$$
+的形式, 其中$f_1(x),f_2(x)$为实函数. 在3.1节里, 我们已经说明过对实自变量复值函数积分, 就是对它的实部和虚部分别积分. 由此可自然地定义
+$$
+\widehat{f}(\omega)=\widehat{f}_1(\omega)+\mi\widehat{f}_2(\omega)
+$$
+为$f(x)$的傅里叶变换. \pause 由傅里叶逆变换的线性性质, 容易验证下面的反演公式成立
+\begin{align*}
+\frac{1}{2\pi}\int_{-\infty}^{+\infty}\widehat{f}(\omega)\me^{\mi\omega
+x}\dif\omega &=\frac{1}{2\pi}\int_{-\infty}^{+\infty}\widehat{f}_1(\omega)\me^{\mi\omega
+x}\dif\omega+\mi\frac{1}{2\pi}\int_{-\infty}^{+\infty}\widehat{f}_2(\omega)\me^{\mi\omega
+x}\dif\omega\\
+&=f_1(x)+\mi f_2(x)=f(x).
+\end{align*}\pause
+而且可以逐一验证前面所述傅里叶变换的性质都仍然成立.
+\end{frame}
+
+\begin{frame}
+现在对$\widehat{u}(\omega_1,x_2)$关于$x_2$作傅里叶变换, 便得
+$$
+\widehat{u}(\omega_1,\omega_2)=\int_{-\infty}^{+\infty}\widehat{u}(\omega_1,x_2)\me^{-\mi\omega_2x_2}\dif x_2.
+$$
+然后对$\widehat{u}(\omega_1,\omega_2)$先关于$\omega_2$做逆变换便又得$\widehat{u}(\omega_1,x_2)$, 即
+\begin{equation*}
+\widehat{u}(\omega_1,x_2)=\frac{1}{2\pi}\int_{-\infty}^{+\infty}\widehat{u}(\omega_1,\omega_2)\me^{\mi\omega_2
+x}\dif\omega_2.
+\end{equation*}
+再对$\widehat{u}(\omega_1,x_2)$关于$\omega_1$做逆变换便又得$u(x_1,x_2)$, 即
+\begin{equation*}
+u(x_1,x_2)=\frac{1}{2\pi}\int_{-\infty}^{+\infty}\widehat{u}(\omega_1,x_2)\me^{\mi\omega_1
+x}\dif\omega_1.
+\end{equation*}
+\end{frame}
+
+\begin{frame}
+将上述变换和逆变换的过程各自合为一个公式表示出来便是
+\begin{align*}
+\widehat{u}(\omega_1,\omega_2) &=\int_{-\infty}^{+\infty}\!\!\int_{-\infty}^{+\infty}u(x_1,x_2)
+\me^{-\mi(\omega_1x_1+\omega_2x_2)}\dif x_1\mathrm{d} x_2,\\[3mm]
+u(x_1,x_2) &=\frac{1}{(2\pi)^2}\int_{-\infty}^{+\infty}\!\!\int_{-\infty}^{+\infty}
+\widehat{u}(\omega_1,\omega_2)\me^{\mi(\omega_1x_1+\omega_2x_2)}\dif\omega_1\mathrm{d}\omega_2.
+\end{align*}
+这两个公式分别就是二重傅里叶变换和逆变换的公式.\pause\spb
+
+\qquad 注意到二重傅里叶变换和逆变换公式的推导只是先对自变量依次逐一作一维傅里叶变换,
+然后再逆序逐一逆变换回去, 最后把变换和逆变换的过程各自合并成一个公式而已.
+\end{frame}
+
+\begin{frame}
+\qquad 对一般的多元函数完全可以做出同样的推导过程. 因此可知$n$重傅里叶变换的定义为
+$$
+\widehat{u}(\omega_1,\omega_2,\cdots,\omega_n)
+=\disp\int_{\R^n}u(x_1,x_2,\cdots,x_n)
+\me^{-\mi(\omega_1x_1+\omega_2x_2+\cdots+\omega_nx_n)}\dif x_1\mathrm{d} x_2\cdots
+\mathrm{d} x_n,
+$$
+相应的逆变换公式为
+$$
+u(x_1,x_2,\cdots,x_n)=\disp\frac{1}{(2\pi)^n}
+\int_{\R^n}\widehat{u}(\omega_1,\omega_2,\cdots,\omega_n)
+\me^{\mi(\omega_1x_1+\omega_2x_2+\cdots+\omega_nx_n)}\dif\omega_1\mathrm{d}\omega_2\cdots
+\mathrm{d}\omega_n,
+$$
+记作
+$$
+\widehat{u}(\omega_1,\omega_2,\cdots,\omega_n)=F[u(x_1,x_2,\cdots,x_n)]\;\text{和}\;
+u(x_1,x_2,\cdots,x_n)=F^{-1}[\widehat{u}(\omega_1,\omega_2,\cdots,\omega_n)].
+$$
+\end{frame}
+
+\begin{frame}
+如果引入向量符号$\bm{x}=(x_1,\cdots,x_n)$和$\bm{\omega}=(\omega_1,\cdots,\omega_n)$,
+则$n$重傅里叶变换和逆变换的公式可以重写为
+\begin{equation*}
+ \widehat{u}(\bm{\omega})= \int_{\R^n}u(\bm{x})\me^{-\mi \bm{x}\cdot\bm{\omega}}\dif \bm{x},  \quad
+  u(\bm{x})= \frac{1}{(2\pi)^n} \int_{\R^n}\widehat{u}(\bm{\omega}) \me^{\mi \bm{x}\cdot\bm{\omega}}\dif \bm{\omega},
+\end{equation*}
+其中$\bm{x}\cdot\bm{\omega}=\omega_1x_1+\omega_2x_2+\cdots+\omega_nx_n$表示向量$\bm{x}$和$\bm{\omega}$的内积.\spb
+
+我们看到, 在向量记法下, $n$重傅里叶变换和逆变换的公式表示与一维情形一样简单.
+\end{frame}
+
+\begin{frame}
+注意到$n$重傅里叶变换不过是$n$个一维傅里叶变换的复合而已,
+我们可以毫不费力地将一元函数傅里叶变换的性质相应地推广到多元函数情形.\spb
+
+例如我们有微分公式
+\begin{align*}
+  F\left[\pp{f}{x_k}\right] &=\mi\omega_kF[f],\;k=1,2,\cdots,n,\\
+  F\left[\pp{^{m_j+m_k}f}{x_j^{m_j}\partial x_k^{m_k}}\right] &= (\mi\omega_j)^{m_j}(\mi\omega_k)^{m_k}F[f],\;j,k=1,2,\cdots,n.
+\end{align*}
+\end{frame}
+
+\begin{frame}
+定义两个$n$元函数的卷积为
+\begin{equation*}
+ f\ast g(\bm{x})= \int_{\R^n}f(\bm{x}-\bm{\xi})g(\bm{\xi})\dif\bm{\xi},
+\end{equation*}
+即
+$$
+f\ast g(x_1,x_2,\cdots,x_n)=\int_{\R^n}
+f(x_1-\xi_1,x_2-\xi_2,\cdots,x_n-\xi_n)g(\xi_1,\xi_2,\cdots,\xi_n)
+\dif\xi_1\mathrm{d}\xi_2\cdots \mathrm{d}\xi_n,
+$$
+则我们有卷积公式
+$$
+F[f\ast g]=F[f]\cdot F[g].
+$$
+\end{frame}
+
+\begin{frame}
+\begin{example}
+求解三维热传导方程的初值问题
+$$
+\left\{
+\begin{array}{ll}
+u_{t}=a^2(u_{xx}+u_{yy}+u_{zz}), & -\infty<x,y,z<+\infty,t>0,\\
+u(x,y,z,0)=\varphi(x,y,z), & -\infty<x,y,z<+\infty.
+\end{array}\right.
+$$
+\end{example}
+
+\textcolor{cyan}{解~} 对方程和初始条件关于空间自变量都做三重傅里叶变换, 得
+$$
+\left\{
+\begin{array}{ll}
+\dfrac{\dif\widehat{u}}{\dif t}=-a^2\rho^2\widehat{u},\quad \rho^2=\omega^2+\mu^2+\nu^2,\\
+\widehat{u}(\omega,\mu,\nu,0)=\widehat{\varphi}(\omega,\mu,\nu).
+\end{array}\right.
+$$
+解得
+$$
+\widehat{u}(\omega,\mu,\nu,t)=\widehat{\varphi}(\omega,\mu,\nu)\me^{-a^2\rho^2t}.
+$$
+\end{frame}
+
+\begin{frame}
+因为
+\begin{align*}
+&\phantom{=\;\,}F^{-1}[\me^{-a^2\rho^2t}] \\
+&=\dfrac{1}{(2\pi)^3}
+\iiint_{\R^3} \me^{-a^2(\omega^2+\mu^2+\nu^2)t} \me^{\mi(\omega x+\mu y+\nu
+z)}\dif\omega \mathrm{d}\mu \mathrm{d}\nu\\ &= \left(\dfrac{1}{2\pi}
+\int_{-\infty}^{+\infty} \me^{-a^2\omega^2t} \me^{\mi\omega
+x}\dif\omega\right) \left(\dfrac{1}{2\pi}
+\int_{-\infty}^{+\infty} \me^{-a^2\mu^2t} \me^{\mi\mu
+y}\mathrm{d}\mu\right) \left(\dfrac{1}{2\pi} \int_{-\infty}^{+\infty}
+\me^{-a^2\nu^2t} \me^{\mi\nu x}\mathrm{d}\nu\right)\\ &=
+\left(\dfrac{1}{2a\sqrt{\pi t}}\right)^3\disp
+\me^{-\frac{x^2+y^2+z^2}{4a^2t}},
+\end{align*}
+所以由卷积公式可得
+$$
+u(x,y,z,t)=\left(\dfrac{1}{2a\sqrt{\pi t}}\right)^3 \iiint_{\R^3}
+\varphi(\xi,\eta,\zeta)\me^{-\frac{(x-\xi)^2+(y-\eta)^2+(z-\zeta)^2}{4a^2t}}\dif\xi\mathrm{d}\eta \mathrm{d}\zeta.\eqno\rule{2.5mm}{4mm}
+$$
+\end{frame}
+
+%\begin{frame}
+%
+%\end{frame}
+
+
+\lecture{6}{6}
+\section{作业}
+\begin{frame}{作业}
+\begin{center}
+习题十
+\end{center}
+
+\begin{enumerate}
+\item[1.] 用傅里叶变换求解下列初值问题\\[3mm]
+\begin{tabbing}
+ (1) $\left\{\begin{array}{ll}
+u_{t}+au_{x}=f(x,t), & x\in\R,t>0,  \\
+u(x,0)=\varphi(x), & x\in\R,
+\end{array}\right.$ \=
+(2)  $
+\left\{
+\begin{array}{ll}
+u_{t}=u_{xx}+tu, & x\in\R,t>0,  \\
+u(x,0)=\varphi(x), & x\in\R,
+\end{array}\right.$
+\end{tabbing}
+\end{enumerate}
+
+\end{frame}
+
+%\begin{frame}
+%\begin{enumerate}
+%\item[2.]
+%
+%\item[3.]
+%\end{enumerate}
+%\end{frame}
+
+
+
+\end{document} 
