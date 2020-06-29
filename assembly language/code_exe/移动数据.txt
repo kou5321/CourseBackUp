@@ -1,0 +1,38 @@
+;将内存ffff:0~ffff:b单元中的数据复制到0:200~0:20b单元中
+
+assume cs:code
+
+code segment
+
+	mov bx, 0		;偏移地址从0开始
+	mov cx, 12		;设置循环次数12次
+	
+s:  mov ax, 0ffffh
+	mov ds, ax  	;基址		
+	mov dl, [bx]	;将ffff:bx中的数据送入dl
+	
+	mov ax, 0020h	;注意0:200等同于0020:0
+	mov ds, ax
+	mov [bx], dl	;将dl的数据送到0020:bx
+	
+	inc bx
+	loop s
+	
+	mov ax, 4c00h
+	int 21h
+	
+code ends
+
+end
+	
+;改进，不用重复 mov ds, ax
+
+assume cs:code
+
+code segment
+
+	mov ax, 0ffffh
+	mov ds, ax
+	
+	mov ax, 0020h
+	mov es, ax

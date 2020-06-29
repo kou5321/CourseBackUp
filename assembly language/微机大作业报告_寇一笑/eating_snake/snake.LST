@@ -1,0 +1,163 @@
+C51 COMPILER V8.02   SNAKE                                                                 08/29/2007 01:03:58 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE SNAKE
+OBJECT MODULE PLACED IN snake.OBJ
+COMPILER INVOKED BY: d:\Keil\C51\BIN\C51.EXE snake.C BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg51.h>
+   2          #define uchar unsigned char
+   3          #define SNAKE 20                 //最大长度
+   4          #define TIME 50                 //显示延时时间
+   5          #define SPEED 71               //速度控制
+   6          //#define  keyenable 1
+   7          sbit keyenable=P3^6;                    //方向使能
+   8          /*sbit keyx=P0^1;                                       //左右
+   9          sbit keyy=P0^2;                                 //上下  */
+  10          //sbit up=P0^0;
+  11          sbit up=P3^3;       //down
+  12          sbit down=P3^1;
+  13          sbit right=P3^2;
+  14          sbit left=P3^4;
+  15          uchar x[SNAKE+1];
+  16          uchar y[SNAKE+1];          
+  17          uchar time,n,i,e;              //延时时间，当前蛇长，通用循环变量，当前速度             
+  18          char addx,addy;                //位移偏移量
+  19          /********************
+  20          延时程序
+  21          *********************/
+  22          void delay(char MS)
+  23          {
+  24   1      char us,usn;
+  25   1      while(MS!=0)
+  26   1      {
+  27   2      usn = 0;
+  28   2      while(usn!=0)
+  29   2      {
+  30   3      us=0xff;
+  31   3      while (us!=0){us--;};
+  32   3      usn--;
+  33   3      }
+  34   2      MS--;
+  35   2      }
+  36   1      }
+  37          /*******************************************
+  38          判断碰撞
+  39          *******************************************/
+  40          bit knock()
+  41          {bit k;
+  42   1      k=0;
+  43   1      if(x[1]>7||y[1]>7)k=1;                             //撞墙
+  44   1      for(i=2;i<n;i++)if((x[1]==x[i])&(y[1]==y[i]))k=1;  //撞自己
+  45   1      return k;
+  46   1      }
+  47          /*****************
+  48          上下左右键位处理
+  49          *****************/
+  50          void turnkey()// interrupt 0 using 2  
+  51          {//up=1;
+  52   1      if(keyenable)
+  53   1      {
+  54   2      if(left){addy=0;if(addx!=1)addx=-1; else addx=1;}
+  55   2      if(right){addy=0;if(addx!=-1)addx=1; else addx=-1;}
+C51 COMPILER V8.02   SNAKE                                                                 08/29/2007 01:03:58 PAGE 2   
+
+  56   2      if(up){addx=0;if(addy!=-1)addy=1; else addy=-1;}
+  57   2      if(down){addx=0;if(addy!=1)addy=-1; else addy=1;}
+  58   2      /*if(keyy)
+  59   2      {addy=0;                                   //左右
+  60   2      if(keyx)if(addx==-1)addx=-1; else addx=1;  //左
+  61   2      else
+  62   2      if(addx==1)addx=1; else addx=-1;           //右
+  63   2      }
+  64   2      else
+  65   2      {addx=0;                                   //上下
+  66   2      if(keyx)if(addy==1)addy=1; else addy=-1;   //下
+  67   2      else
+  68   2      if(addy==-1)addy=-1; else addy=1;          //上   
+  69   2      } */
+  70   2      }
+  71   1      }
+  72          /*****************
+  73          乘方程序
+  74          *****************/
+  75          uchar mux(uchar temp) 
+  76          {
+  77   1      if(temp==7)return 128;
+  78   1      if(temp==6)return 64;
+  79   1      if(temp==5)return 32;
+  80   1      if(temp==4)return 16;
+  81   1      if(temp==3)return 8;
+  82   1      if(temp==2)return 4;
+  83   1      if(temp==1)return 2;
+  84   1      if(temp==0)return 1;
+  85   1      return 0;
+  86   1      }
+  87          /*****************
+  88          显示时钟 显示程序
+  89          *****************/
+  90          void timer0(uchar k)
+  91          {while(k--)
+  92   1      {for(i=0;i<SNAKE+1;i++)
+  93   2      {P2=mux(x[i]);P1=255-mux(y[i]);
+  94   3      turnkey();                     //上下左右键位处理
+  95   3      delay(TIME);                   //显示延迟
+  96   3      P2=0x00;P1=0xff;
+  97   3      }}
+  98   1      } 
+  99          /*****************
+ 100          主程序
+ 101          *****************/      
+ 102          void main(void)
+ 103          {e=SPEED;
+ 104   1       P0=0x00;
+ 105   1       P1=0xff;
+ 106   1       P2=0x00;
+ 107   1       P3=0x00;
+ 108   1      while(1)       
+ 109   1       {//if(keyenable==1){P1=0x00;P2=0xff;}else{P1=0xff;P2=0x00;}
+ 110   2       for(i=3;i<SNAKE+1;i++)x[i]=100;for(i=3;i<SNAKE+1;i++)y[i]=100;//初始化
+ 111   2       x[0]=4;y[0]=4;                                                //果子                            
+ 112   2       n=3;                                                          //蛇长 n=-1
+ 113   2       x[1]=1;y[1]=0;                                                //蛇头
+ 114   2       x[2]=0;y[2]=0;                                                //蛇尾1
+ 115   2       addx=0;addy=0;                                                //位移偏移
+ 116   2       //k=1;
+ 117   2       while(1){if(keyenable)break;timer0(1);}
+C51 COMPILER V8.02   SNAKE                                                                 08/29/2007 01:03:58 PAGE 3   
+
+ 118   2       while(1)         
+ 119   2        {timer0(e);
+ 120   3         if(knock()){e=SPEED;break;}                          //判断碰撞
+ 121   3              if((x[0]==x[1]+addx)&(y[0]==y[1]+addy))         //是否吃东西
+ 122   3                 {n++;
+ 123   4                         if(n==SNAKE+1)
+ 124   4                         {n=3;e=e-10;
+ 125   5                         for(i=3;i<SNAKE+1;i++)x[i]=100;
+ 126   5                 for(i=3;i<SNAKE+1;i++)y[i]=100;
+ 127   5                         }
+ 128   4                 x[0]=x[n-2];
+ 129   4                 y[0]=y[n-2];
+ 130   4                 }
+ 131   3          for(i=n-1;i>1;i--){x[i]=x[i-1];y[i]=y[i-1];}        
+ 132   3          //x[n-1]=x[2];y[n-1]=y[2];
+ 133   3          x[1]=x[2]+addx;y[1]=y[2]+addy;                     //移动
+ 134   3        }                                             
+ 135   2       }                      
+ 136   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    573    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     48    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----       1
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

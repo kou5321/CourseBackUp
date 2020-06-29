@@ -1,0 +1,25 @@
+;计算ffff:0-ffff:b的和，结果储存在dx中
+assume cs:code
+code segment
+	
+	mov ax, 0ffffh
+	mov ds, ax  ;数据段基址
+	mov cx, 12  ;loop
+	mov bx, 0   ;存放偏移
+	mov dx, 0   ;初始化累加寄存器
+	
+  s:mov al, [bx];
+    mov ah, 0
+	add dx, ax
+	inc bx
+	loop s
+	
+	mov ax, 4c00h
+	int 21h
+	
+code ends
+end
+	
+	
+
+	
